@@ -49,28 +49,29 @@ List<FlSpot> _generateCosinusSpots(dataRange) {
   return spots;
 }
 
-List<FlSpot> _generateWaveFunction(
-    int nPoints,
-    double amplitude,
-    double frequency,
-    double phase,
-    double width,
-    Function(double) waveFunction,
-    double noiseLevel) {
-  List<FlSpot> waveFunctionList = [];
-  for (int i = 0; i < nPoints; i++) {
-    double x = i / nPoints;
-    double y = amplitude * waveFunction(2.0 * pi * frequency * (x - phase)) +
-        noiseLevel * Random().nextDouble();
-    if (x < phase - width / 2.0 || x > phase + width / 2.0) {
-      y = 0.0;
-    }
-    waveFunctionList.add(FlSpot(x, y));
-  }
-  return waveFunctionList;
-}
+// List<FlSpot> _generateWaveFunction(
+//     int nPoints,
+//     double amplitude,
+//     double frequency,
+//     double phase,
+//     double width,
+//     Function(double) waveFunction,
+//     double noiseLevel) {
+//   List<FlSpot> waveFunctionList = [];
+//   for (int i = 0; i < nPoints; i++) {
+//     double x = i / nPoints;
+//     double y = amplitude * waveFunction(2.0 * pi * frequency * (x - phase)) +
+//         noiseLevel * Random().nextDouble();
+//     if (x < phase - width / 2.0 || x > phase + width / 2.0) {
+//       y = 0.0;
+//     }
+//     waveFunctionList.add(FlSpot(x, y));
+//   }
+//   return waveFunctionList;
+// }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _isScaling = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -80,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: ListView(
+        physics: _isScaling ? const NeverScrollableScrollPhysics() : null,
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -90,6 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -101,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -112,6 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -123,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -134,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -145,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -156,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -167,6 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
           SizedBox(
@@ -178,6 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
               minY: -1,
               maxY: 1,
               builder: _builderFunction,
+              //onScaling: _isScalingCallback,
             ),
           ),
         ],
@@ -216,8 +227,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             )
             .toList(),
-        lineTouchData: const LineTouchData(enabled: true),
+        lineTouchData: const LineTouchData(enabled: false),
       ),
     );
+  }
+
+  void _isScalingCallback(bool isScaling) {
+    debugPrint("isScaling: $isScaling");
+    setState(() {
+      _isScaling = isScaling;
+    });
   }
 }
