@@ -36,7 +36,10 @@ class MyHomePage extends StatefulWidget {
 List<FlSpot> _generateSinusSpots(dataRange) {
   List<FlSpot> spots = [];
   for (int i = 0; i < dataRange; i++) {
-    spots.add(FlSpot(i.toDouble(), sin(i * pi / 180)));
+    final x = i * pi / 180;
+    final val = sin(x) * exp(-x / 5) + cos(x) * log(x + 1) - tan(x / 10);
+    spots.add(FlSpot(i.toDouble(), val));
+    //spots.add(FlSpot(i.toDouble(), sin(x)));
   }
   return spots;
 }
@@ -49,154 +52,208 @@ List<FlSpot> _generateCosinusSpots(dataRange) {
   return spots;
 }
 
-// List<FlSpot> _generateWaveFunction(
-//     int nPoints,
-//     double amplitude,
-//     double frequency,
-//     double phase,
-//     double width,
-//     Function(double) waveFunction,
-//     double noiseLevel) {
-//   List<FlSpot> waveFunctionList = [];
-//   for (int i = 0; i < nPoints; i++) {
-//     double x = i / nPoints;
-//     double y = amplitude * waveFunction(2.0 * pi * frequency * (x - phase)) +
-//         noiseLevel * Random().nextDouble();
-//     if (x < phase - width / 2.0 || x > phase + width / 2.0) {
-//       y = 0.0;
-//     }
-//     waveFunctionList.add(FlSpot(x, y));
-//   }
-//   return waveFunctionList;
-// }
-
 class _MyHomePageState extends State<MyHomePage> {
   bool _isScaling = false;
+  int _pageIndex = 0;
+  final PageController _pageController = PageController();
+  final _spots = <String, List<FlSpot>>{
+    "sinus": _generateSinusSpots(100000),
+    "cosinus": _generateCosinusSpots(100000),
+  };
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      if (_pageController.page == _pageController.page!.roundToDouble()) {
+        setState(() => _pageIndex = _pageController.page!.toInt());
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: ListView(
-        physics: _isScaling ? const NeverScrollableScrollPhysics() : null,
-        children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              onScaling: _isScalingCallback,
-            ),
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            title: Text(widget.title),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+          body: PageView(
+            controller: _pageController,
+            physics: _isScaling ? const NeverScrollableScrollPhysics() : null,
+            children: [_page1(), _page2()],
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _pageIndex,
+            onTap: (index) {
+              setState(() => _pageIndex = index);
+              _pageController.animateToPage(index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.bar_chart),
+                label: "Chart",
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.image),
+                label: "Image",
+              ),
+            ],
+          )),
+    );
+  }
+
+  _page1() {
+    return ListView(
+      physics: _isScaling ? const NeverScrollableScrollPhysics() : null,
+      children: [
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 620.0,
+            maxX: 1300.0,
+            minY: -6.6,
+            maxY: 6.6,
+            builder: _builderFunction,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            child: ZoomableLineChart(
-              minX: 0,
-              maxX: 100,
-              minY: -1,
-              maxY: 1,
-              builder: _builderFunction,
-              //onScaling: _isScalingCallback,
-            ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
           ),
-        ],
-      ),
-    ));
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
+          ),
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: 200,
+          child: ZoomableLineChart(
+            onScaling: (scaling) => Future.delayed(
+                Duration.zero, () => setState(() => _isScaling = scaling)),
+            minX: 0,
+            maxX: 100,
+            minY: -1,
+            maxY: 1,
+            builder: _builderFunction,
+          ),
+        ),
+      ],
+    );
+  }
+
+  _page2() {
+    return Center(
+        child:
+            Image.network("https://cdn.wallpapersafari.com/12/11/1Q7KOp.jpg"));
   }
 
   Widget _builderFunction(double minX, double maxX, double minY, double maxY) {
+    final spots = {
+      "sinus": _spots["sinus"]!
+          .where((element) =>
+              element.x >= minX - (maxX - minX) * 0.3 &&
+              element.x <= maxX + (maxX - minX) * 0.3 &&
+              element.y >= minY - (maxY - minY) * 0.3 &&
+              element.y <= maxY + (maxY - minY) * 0.3)
+          .toList(),
+      "cosinus": _spots["cosinus"]!
+          .where((element) =>
+              element.x >= minX - (maxX - minX) * 0.3 &&
+              element.x <= maxX + (maxX - minX) * 0.3 &&
+              element.y >= minY - (maxY - minY) * 0.3 &&
+              element.y <= maxY + (maxY - minY) * 0.3)
+          .toList(),
+    };
+    //final spots = _spots;
     return LineChart(
       duration: Duration.zero,
       LineChartData(
@@ -210,20 +267,15 @@ class _MyHomePageState extends State<MyHomePage> {
         borderData: FlBorderData(
           show: true,
         ),
-        lineBarsData: {
-          "sinus": _generateSinusSpots(100000),
-          "cosinus": _generateCosinusSpots(100001),
-        }
-            .values
+        lineBarsData: spots.keys
             .toList()
             .map(
-              (v) => LineChartBarData(
-                spots:
-                    v, // Getting filtered spots based on startRange and endRange
+              (k) => LineChartBarData(
+                spots: fillGapsInSpots(spots[k]!, 1),
                 isCurved: false,
                 dotData: const FlDotData(show: false),
                 belowBarData: BarAreaData(show: false),
-                color: v.length > 100000 ? Colors.red : Colors.blue,
+                color: k == "sinus" ? Colors.red : Colors.blue,
               ),
             )
             .toList(),
@@ -232,10 +284,34 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _isScalingCallback(bool isScaling) {
-    debugPrint("isScaling: $isScaling");
-    setState(() {
-      _isScaling = isScaling;
-    });
+  List<FlSpot> fillGapsInSpots(List<FlSpot> spots, double gapThreshold) {
+    final localSpots = List.from(spots);
+    // Ensure the list is sorted based on the x-value
+    localSpots.sort((a, b) => a.x.compareTo(b.x));
+
+    List<FlSpot> filledSpots = [];
+    if (localSpots.isEmpty) {
+      return filledSpots;
+    }
+    for (int i = 0; i < localSpots.length - 1; i++) {
+      // Add the current spot to the new list
+      filledSpots.add(localSpots[i]);
+
+      // Calculate the difference between consecutive x-values
+      if (localSpots.length > i + 1) {
+        double diff = localSpots[i + 1].x - localSpots[i].x;
+
+        // If the difference exceeds our threshold, we consider this a gap
+        if (diff > gapThreshold) {
+          // Insert a null spot to create a gap in the chart
+          filledSpots.add(FlSpot(localSpots[i].x + diff / 2, double.nan));
+        }
+      }
+    }
+
+    // Add the last spot to the list since we are not checking it in the loop
+    filledSpots.add(localSpots.last);
+
+    return filledSpots;
   }
 }
