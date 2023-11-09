@@ -106,127 +106,146 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _page1() {
-    return ListView(
+    final list = [
+      SizedBox(
+        key: const Key("1"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 620.0,
+          maxX: 1300.0,
+          minY: -6.6,
+          maxY: 6.6,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("2"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("3"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("4"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("5"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("6"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("7"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("8"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+      SizedBox(
+        key: const Key("9"),
+        width: MediaQuery.of(context).size.width,
+        height: 200,
+        child: ZoomableLineChart(
+          onScaling: (scaling) => Future.delayed(
+              Duration.zero, () => setState(() => _isScaling = scaling)),
+          minX: 0,
+          maxX: 100,
+          minY: -1,
+          maxY: 1,
+          builder: _builderFunction,
+        ),
+      ),
+    ];
+    return ReorderableListView(
+      onReorder: (oldIndex, newIndex) {
+        setState(() {
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          final item = list.removeAt(oldIndex);
+          list.insert(newIndex, item);
+        });
+      },
       physics: _isScaling ? const NeverScrollableScrollPhysics() : null,
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 620.0,
-            maxX: 1300.0,
-            minY: -6.6,
-            maxY: 6.6,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-        SizedBox(
-          width: MediaQuery.of(context).size.width,
-          height: 200,
-          child: ZoomableLineChart(
-            onScaling: (scaling) => Future.delayed(
-                Duration.zero, () => setState(() => _isScaling = scaling)),
-            minX: 0,
-            maxX: 100,
-            minY: -1,
-            maxY: 1,
-            builder: _builderFunction,
-          ),
-        ),
-      ],
+      children: list,
     );
   }
 
