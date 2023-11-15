@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:zoomable_fl_chart/zoomable_line_chart.dart';
+import 'package:zoomable_fl_chart/zoomable_line_chart_updated.dart';
 
 void main() {
   runApp(const MyApp());
@@ -111,13 +112,15 @@ class _MyHomePageState extends State<MyHomePage> {
         key: const Key("1"),
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: ZoomableLineChart(
+        child: ZoomableLineChartUpdated(
           onScaling: (scaling) => Future.delayed(
               Duration.zero, () => setState(() => _isScaling = scaling)),
           minX: 620.0,
           maxX: 1300.0,
           minY: -6.6,
           maxY: 6.6,
+          dragEnabled: true,
+          scaleEnabled: true,
           builder: _builderFunction,
         ),
       ),
@@ -125,13 +128,15 @@ class _MyHomePageState extends State<MyHomePage> {
         key: const Key("2"),
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: ZoomableLineChart(
+        child: ZoomableLineChartUpdated(
           onScaling: (scaling) => Future.delayed(
               Duration.zero, () => setState(() => _isScaling = scaling)),
           minX: 0,
           maxX: 100,
           minY: -1,
           maxY: 1,
+          dragEnabled: true,
+          scaleEnabled: false,
           builder: _builderFunction,
         ),
       ),
@@ -139,13 +144,15 @@ class _MyHomePageState extends State<MyHomePage> {
         key: const Key("3"),
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: ZoomableLineChart(
+        child: ZoomableLineChartUpdated(
           onScaling: (scaling) => Future.delayed(
               Duration.zero, () => setState(() => _isScaling = scaling)),
           minX: 0,
           maxX: 100,
           minY: -1,
           maxY: 1,
+          dragEnabled: true,
+          scaleEnabled: true,
           builder: _builderFunction,
         ),
       ),
