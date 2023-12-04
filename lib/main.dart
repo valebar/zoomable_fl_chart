@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:zoomable_fl_chart/zoomable_line_chart.dart';
-import 'package:zoomable_fl_chart/zoomable_line_chart_updated.dart';
 
 void main() {
   runApp(const MyApp());
@@ -112,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
         key: const Key("1"),
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: ZoomableLineChartUpdated(
+        child: ZoomableLineChart(
           onScaling: (scaling) => Future.delayed(
               Duration.zero, () => setState(() => _isScaling = scaling)),
           minX: 620.0,
@@ -128,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
         key: const Key("2"),
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: ZoomableLineChartUpdated(
+        child: ZoomableLineChart(
           onScaling: (scaling) => Future.delayed(
               Duration.zero, () => setState(() => _isScaling = scaling)),
           minX: 0,
@@ -144,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
         key: const Key("3"),
         width: MediaQuery.of(context).size.width,
         height: 200,
-        child: ZoomableLineChartUpdated(
+        child: ZoomableLineChart(
           onScaling: (scaling) => Future.delayed(
               Duration.zero, () => setState(() => _isScaling = scaling)),
           minX: 0,
@@ -168,6 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minY: -1,
           maxY: 1,
           builder: _builderFunction,
+          dragEnabled: false,
+          scaleEnabled: false,
         ),
       ),
       SizedBox(
@@ -182,6 +183,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minY: -1,
           maxY: 1,
           builder: _builderFunction,
+          dragEnabled: false,
+          scaleEnabled: false,
         ),
       ),
       SizedBox(
@@ -196,6 +199,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minY: -1,
           maxY: 1,
           builder: _builderFunction,
+          dragEnabled: false,
+          scaleEnabled: false,
         ),
       ),
       SizedBox(
@@ -210,6 +215,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minY: -1,
           maxY: 1,
           builder: _builderFunction,
+          dragEnabled: false,
+          scaleEnabled: false,
         ),
       ),
       SizedBox(
@@ -224,6 +231,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minY: -1,
           maxY: 1,
           builder: _builderFunction,
+          dragEnabled: false,
+          scaleEnabled: false,
         ),
       ),
       SizedBox(
@@ -238,6 +247,8 @@ class _MyHomePageState extends State<MyHomePage> {
           minY: -1,
           maxY: 1,
           builder: _builderFunction,
+          dragEnabled: false,
+          scaleEnabled: false,
         ),
       ),
     ];
@@ -262,7 +273,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Image.network("https://cdn.wallpapersafari.com/12/11/1Q7KOp.jpg"));
   }
 
-  Widget _builderFunction(double minX, double maxX, double minY, double maxY) {
+  Widget _builderFunction(
+      double minX, double maxX, double minY, double maxY, bool showMarker) {
     final spots = {
       "sinus": _spots["sinus"]!
           .where((element) =>
@@ -305,7 +317,35 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             )
             .toList(),
-        lineTouchData: const LineTouchData(enabled: false),
+        lineTouchData: LineTouchData(
+          enabled: showMarker,
+          touchTooltipData: LineTouchTooltipData(
+              tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+              getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                return touchedBarSpots.map((barSpot) {
+                  final flSpot = barSpot;
+                  return LineTooltipItem(
+                    flSpot.y.toStringAsFixed(5),
+                    const TextStyle(color: Colors.white),
+                  );
+                }).toList();
+              }),
+          getTouchedSpotIndicator: (barData, spotIndexes) {
+            return spotIndexes.map((spotIndex) {
+              const color = Colors.red;
+              return const TouchedSpotIndicatorData(
+                FlLine(
+                  color: color,
+                  dashArray: [5, 10],
+                  strokeWidth: 2,
+                ),
+                FlDotData(
+                  show: true,
+                ),
+              );
+            }).toList();
+          },
+        ),
       ),
     );
   }

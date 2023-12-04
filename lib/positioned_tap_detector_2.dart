@@ -7,7 +7,7 @@ typedef TapPositionCallback = void Function(TapPosition position);
 
 class PositionedTapDetector2 extends StatefulWidget {
   const PositionedTapDetector2({
-    Key? key,
+    super.key,
     this.child,
     this.onTap,
     this.onDoubleTap,
@@ -16,7 +16,7 @@ class PositionedTapDetector2 extends StatefulWidget {
     this.doubleTapDelay = _defaultDelay,
     this.behavior,
     this.controller,
-  }) : super(key: key);
+  });
 
   static const _defaultDelay = Duration(milliseconds: 250);
   static const _doubleTapMaxOffset = 48.0;
